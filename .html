@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror Park Repairs</title>
+    <style>
+        body {
+            background-color: #ffe6e6; /* Light pink */
+            margin-bottom: 40px; /* Add space for the footer */
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            font-weight: bold;
+        }
+        button {
+            background-color: #ffff99; /* Light yellow */
+            border: none;
+            color: black;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        .collapsible {
+            background-color: #f2f2f2;
+            color: black;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+        .active, .collapsible:hover {
+            background-color: #ccc;
+        }
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f2f2f2;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 5px 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Mirror Park Repairs</h2>
+    <form id="inventoryForm">
+        <label for="customerName">Customer Name:</label>
+        <input type="text" id="customerName" name="customerName" required><br><br>
+        <label for="ftoName">FTO Name:</label>
+        <input type="text" id="ftoName" name="ftoName"><br><br>
+        <label for="plateNumber">Plate Number:</label>
+        <input type="text" id="plateNumber" name="plateNumber" required><br><br>
+        <label for="vehicleModel">Vehicle Model:</label>
+        <input type="text" id="vehicleModel" name="vehicleModel" required><br><br>
+
+        <input type="text" id="search" placeholder="Search items by name" onkeyup="searchItems()">
+        
+        <button type="button" class="collapsible">Performance</button>
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="performanceItems">
+                    <!-- Performance items will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" class="collapsible">Cosmetic</button>
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="cosmeticItems">
+                    <!-- Cosmetic items will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <button type="button" class="collapsible">Resprays</button>
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="resprayItems">
+                    <!-- Respray items will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Add more categories -->
+
+        <br>
+        <button type="button" onclick="calculateTotal()">Calculate Total</button>
+        <button type="button" onclick="clearCustomerInfo()">Clear Customer Info</button>
+        <button type="button" onclick="clearItems()">Clear Items</button>
+        <button type="button" onclick="undoSelection()">Undo</button>
+    </form>
+    <br>
+    <div id="summary"></div>
+
+    <footer>Mirror Park Repairs. All rights reserved.</footer>
+
+    <script>
+        const items = [
+            { category: 'Performance', name: 'Engine 2', price: 4250 },
+            { category: 'Cosmetic', name: 'Pearlescent', price: 500 },
+            // Add more items here
+            { category: 'Performance', name: 'Engine 3', price: 6500 },
+            { category: 'Performance', name: 'Engine 4', price: 10450 },
+            { category: 'Performance', name: 'Engine 5', price: 14250 },
+            { category: 'Performance', name: 'Engine 6', price: 19500 },
+            { category: 'Performance', name: 'Suspension 2', price: 4250 },
+            { category: 'Performance', name: 'Suspension 3', price: 6500 },
+            { category: 'Performance', name: 'Suspension 4', price: 10450 },
+            { category: 'Performance', name: 'Suspension 5', price: 14250 },
+            { category: 'Cosmetic', name: 'Arch Cover', price: 500 },
+            { category: 'Cosmetic', name: 'Aerial', price: 500 },
+            { category: 'Cosmetic', name: 'Front Bumper', price: 500 },
+            { category: 'Cosmetic', name: 'Rear Bumper', price: 500 },
+            { category: 'Cosmetic', name: 'Grille', price: 500 },
+            { category: 'Cosmetic', name: 'Hood', price: 500 },
+            { category: 'Cosmetic', name: 'Left Fender', price: 500 },
+            { category: 'Cosmetic', name: 'Right Fender', price: 500 },
+            { category: 'Cosmetic', name: 'Rims', price: 500 },
+            { category: 'Cosmetic', name: 'Roof', price: 500 },
+            { category: 'Cosmetic', name: 'Side Skirt', price: 500 },
+            { category: 'Cosmetic', name: 'Roll Cage', price: 500 },
+            { category: 'Cosmetic', name: 'Strut', price: 500 },
+            { category: 'Cosmetic', name: 'Speaker', price: 500 },
+            { category: 'Cosmetic', name: 'Trim A', price: 500 },
+            { category: 'Cosmetic', name: 'Trim B', price: 500 },
+            { category: 'Cosmetic', name: 'Tire Smoke', price: 500 },
+            { category: 'Cosmetic', name: 'Seats', price: 500 },
+            { category: 'Cosmetic', name: 'Steering Wheel', price: 500 },
+            { category: 'Resprays', name: 'P Respray', price: 1100 },
+            { category: 'Resprays', name: 'Pearlescent Respray', price: 1100 },
+            { category: 'Resprays', name: 'S Respray', price: 1100 },
+            { category: 'Resprays', name: 'Interior Color', price: 1100 },
+            { category: 'Resprays', name: 'Rim Color', price: 1100 },
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const performanceItems = document.getElementById('performanceItems');
+            const cosmeticItems = document.getElementById('cosmeticItems');
+            const resprayItems = document.getElementById('resprayItems');
+
+            items.forEach(item => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.textContent = item.name;
+                button.setAttribute('data-name', item.name);
+                button.setAttribute('data-price', item.price);
+                button.classList.add('item');
+                button.addEventListener('click', function() {
+                    const itemName = this.getAttribute('data-name');
+                    const itemPrice = parseInt(this.getAttribute('data-price'));
+                    selectedItems.push({ name: itemName, price: itemPrice });
+                    calculateTotal();
+                });
+
+                const row = document.createElement('tr');
+                const nameCell = document.createElement('td');
+                const priceCell = document.createElement('td');
+                nameCell.appendChild(button);
+                priceCell.textContent = '$' + item.price;
+                row.appendChild(nameCell);
+                row.appendChild(priceCell);
+
+                if (item.category === 'Performance') {
+                    performanceItems.appendChild(row);
+                } else if (item.category === 'Cosmetic') {
+                    cosmeticItems.appendChild(row);
+                } else if (item.category === 'Resprays') {
+                    resprayItems.appendChild(row);
+                }
+            });
+        });
+
+        const selectedItems = [];
+
+        document.querySelectorAll('.collapsible').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                } else {
+                    content.style.display = 'block';
+                }
+            });
+        });
+
+        function calculateTotal() {
+            let total = 0;
+
+            const summary = document.getElementById('summary');
+            summary.innerHTML = '';
+
+            const upgrades = selectedItems.map(item => item.name).join(', ');
+
+            selectedItems.forEach(item => {
+                total += item.price;
+            });
+
+            const customerName = document.getElementById('customerName').value;
+            const ftoName = document.getElementById('ftoName').value;
+            const plateNumber = document.getElementById('plateNumber').value;
+            const vehicleModel = document.getElementById('vehicleModel').value;
+
+            summary.innerHTML = `Customer Name: ${customerName}<br>`;
+            if (ftoName.trim() !== '') {
+                summary.innerHTML += `FTO Name: ${ftoName}<br>`;
+            }
+            summary.innerHTML += `Vehicle | Make/Model: ${vehicleModel}<br>`;
+            summary.innerHTML += `Plate: ${plateNumber}<br>`;
+            summary.innerHTML += `Upgrades Purchased: ${upgrades}<br>`;
+            summary.innerHTML += `Price Charged: $${total}<br>`;
+            summary.innerHTML += `SHOP: Mirror Park Repairs<br>`;
+        }
+
+        function undoSelection() {
+            if (selectedItems.length > 0) {
+                selectedItems.pop();
+                calculateTotal();
+            }
+        }
+
+        function clearCustomerInfo() {
+            document.getElementById('customerName').value = '';
+            document.getElementById('ftoName').value = '';
+            document.getElementById('plateNumber').value = '';
+            document.getElementById('vehicleModel').value = '';
+            calculateTotal();
+        }
+
+        function clearItems() {
+            selectedItems.length = 0;
+            calculateTotal();
+        }
+
+        function searchItems() {
+            const searchInput = document.getElementById('search').value.toLowerCase();
+            const itemButtons = document.querySelectorAll('.item');
+            const performanceContent = document.getElementById('performanceItems');
+            const cosmeticContent = document.getElementById('cosmeticItems');
+            const resprayContent = document.getElementById('resprayItems');
+            
+            itemButtons.forEach(button => {
+                const itemName = button.getAttribute('data-name').toLowerCase();
+                const parentTr = button.closest('tr');
+
+                if (itemName.includes(searchInput)) {
+                    parentTr.style.display = 'table-row';
+                    if (parentTr.parentElement === performanceContent || parentTr.parentElement === cosmeticContent || parentTr.parentElement === resprayContent) {
+                        parentTr.parentElement.previousElementSibling.classList.add('active');
+                        parentTr.parentElement.style.display = 'block';
+                    }
+                } else {
+                    parentTr.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
