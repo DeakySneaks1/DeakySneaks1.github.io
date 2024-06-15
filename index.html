@@ -270,16 +270,25 @@
             });
         });
 
-        function calculateTotal() {
-            let total = 0;
+       function calculateTotal() {
+    let total = 0;
 
-            const summary = document.getElementById('summary');
-            summary.innerHTML = '';
+    const summary = document.getElementById('summary');
+    summary.innerHTML = '';
 
-            const upgrades = selectedItems.map(item => item.name).join(', ');
+    let upgrades = selectedItems.map(item => item.name).join(', ');
 
-            selectedItems.forEach(item => {
-                total += item.price;
+    // Special case: If both "P Respray" and "S Respray" are selected, show as "P/S Respray"
+    const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
+    const sRespraySelected = selectedItems.some(item => item.name === 'S Respray');
+
+    if (pRespraySelected && sRespraySelected) {
+        upgrades = upgrades.replace('P Respray', 'P/S Respray');
+        upgrades = upgrades.replace(', S Respray', '');
+    }
+
+    selectedItems.forEach(item => {
+        total += item.price;
             });
 
             const customerName = document.getElementById('customerName').value;
