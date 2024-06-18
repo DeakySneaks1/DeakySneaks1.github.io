@@ -272,8 +272,16 @@
             });
         });
 
-       function calculateTotal() {
+      function calculateTotal() {
     let total = 0;
+
+    // Calculate total price
+    selectedItems.forEach(item => {
+        total += item.price;
+    });
+
+    // Format total with commas
+    const formattedTotal = total.toLocaleString();
 
     const summary = document.getElementById('summary');
     summary.innerHTML = '';
@@ -289,25 +297,21 @@
         upgrades = upgrades.replace(', S Respray', '');
     }
 
-    selectedItems.forEach(item => {
-        total += item.price;
-            });
+    const customerName = document.getElementById('customerName').value;
+    const ftoName = document.getElementById('ftoName').value;
+    const plateNumber = document.getElementById('plateNumber').value;
+    const vehicleModel = document.getElementById('vehicleModel').value;
 
-            const customerName = document.getElementById('customerName').value;
-            const ftoName = document.getElementById('ftoName').value;
-            const plateNumber = document.getElementById('plateNumber').value;
-            const vehicleModel = document.getElementById('vehicleModel').value;
-
-            summary.innerHTML = `Customer Name: ${customerName}<br>`;
-            if (ftoName.trim() !== '') {
-                summary.innerHTML += `FTO Name: ${ftoName}<br>`;
-            }
-            summary.innerHTML += `Vehicle | Make/Model: ${vehicleModel}<br>`;
-            summary.innerHTML += `Plate: ${plateNumber}<br>`;
-            summary.innerHTML += `Upgrades Purchased: ${upgrades}<br>`;
-            summary.innerHTML += `Price Charged: $${total}<br>`;
-            summary.innerHTML += `SHOP: Mirror Park Repairs<br>`;
-        }
+    summary.innerHTML = `Customer Name: ${customerName}<br>`;
+    if (ftoName.trim() !== '') {
+        summary.innerHTML += `FTO Name: ${ftoName}<br>`;
+    }
+    summary.innerHTML += `Vehicle | Make/Model: ${vehicleModel}<br>`;
+    summary.innerHTML += `Plate: ${plateNumber}<br>`;
+    summary.innerHTML += `Upgrades Purchased: ${upgrades}<br>`;
+    summary.innerHTML += `Price Charged: $${formattedTotal}<br>`;
+    summary.innerHTML += `SHOP: Mirror Park Repairs<br>`;
+}
 
         function undoSelection() {
             if (selectedItems.length > 0) {
