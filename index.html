@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -144,6 +145,20 @@
                 </tbody>
             </table>
         </div>
+        <button type="button" class="collapsible">Lights</button>
+        <div class="content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="lightItems">
+                    <!-- Light Items will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
         
         <!-- Add more categories -->
 
@@ -182,8 +197,17 @@
             { category: 'Performance', name: 'Armor 3', price: 6500 },
             { category: 'Performance', name: 'Armor 4', price: 14250 },
             { category: 'Cosmetic', name: 'Arch Cover', price: 500 },
-             { category: 'Cosmetic', name: 'Air Filter', price: 500 },
+            { category: 'Cosmetic', name: 'Air Filter', price: 500 },
             { category: 'Cosmetic', name: 'Dashboard', price: 500 },
+            { category: 'Cosmetic', name: 'Engine Block', price: 500 },
+            { category: 'Cosmetic', name: 'Fuel Tank', price: 500 },
+            { category: 'Cosmetic', name: 'Ornament', price: 500 },
+            { category: 'Cosmetic', name: 'Brace', price: 500 },
+            { category: 'Cosmetic', name: 'Window', price: 500 }, 
+            { category: 'Cosmetic', name: 'Plaque', price: 500 },
+            { category: 'Cosmetic', name: 'Hydraulic', price: 500 },
+            { category: 'Cosmetic', name: 'Door Panel', price: 500 },
+            { category: 'Cosmetic', name: 'Tag', price: 500 },
             { category: 'Cosmetic', name: 'Rims', price: 500 },
             { category: 'Cosmetic', name: 'Spoiler', price: 500 },
             { category: 'Cosmetic', name: 'Aerial', price: 500 },
@@ -218,6 +242,13 @@
             { category: 'Resprays', name: 'Rim Respray', price: 1100 },
             { category: 'Resprays', name: 'Dashboard Respray', price: 1100 },
             { category: 'Resprays', name: 'Plate Index', price: 1100 },
+            { category: 'Lights', name: 'Neon Kit & Colour', price: 1100 },
+            { category: 'Lights', name: 'Neon', price: 200 },
+            { category: 'Lights', name: 'Neon Colour', price: 600 },
+            { category: 'Lights', name: 'Xenon Kit & Colour', price: 800 },
+            { category: 'Lights', name: 'Neon Color', price: 600 },
+            { category: 'Lights', name: 'Xenon', price: 200 },
+            
        
             
         ];
@@ -226,6 +257,7 @@
             const performanceItems = document.getElementById('performanceItems');
             const cosmeticItems = document.getElementById('cosmeticItems');
             const resprayItems = document.getElementById('resprayItems');
+            const lightItems = document.getElementById('lightItems');
 
             items.forEach(item => {
                 const button = document.createElement('button');
@@ -255,6 +287,8 @@
                     cosmeticItems.appendChild(row);
                 } else if (item.category === 'Resprays') {
                     resprayItems.appendChild(row);
+                } else if (item.category === 'Lights') {
+                    lightItems.appendChild(row);
                 }
             });
         });
