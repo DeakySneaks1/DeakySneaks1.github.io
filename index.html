@@ -246,6 +246,9 @@
         <input type="text" id="vehicleModel" name="vehicleModel" required><br><br>
         <label for="shopname">Shop Name:</label>
         <input type="text" id="shopname" name="shopname" required><br><br>
+        <label for="manualTotal">Manual Total Price:</label>
+<input type="text" id="manualTotal" name="manualTotal" placeholder="Enter Total Price"><br><br>
+
 
         <input type="text" id="search" placeholder="Search items by name" onkeyup="searchItems()">
         
@@ -479,6 +482,8 @@
     summary.innerHTML = '';
 
     let upgrades = selectedItems.map(item => item.name).join(', ');
+    const manualTotal = document.getElementById('manualTotal').value;
+
 
     // Special case: If both "P Respray" and "S Respray" are selected, show as "P/S Respray"
     const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
@@ -502,9 +507,10 @@
     summary.innerHTML += `Vehicle | Make/Model: ${vehicleModel}<br>`;
     summary.innerHTML += `Plate: ${plateNumber}<br>`;
     summary.innerHTML += `Upgrades Purchased: ${upgrades}<br>`;
-    summary.innerHTML += `Price Charged: $${formattedTotal}<br>`;
     summary.innerHTML += `Shop Name: ${shopname}<br>`;
-    
+        // Display the manually inputted total price
+    summary.innerHTML += `Price Charged: $${manualTotal}<br>`;
+    summary.innerHTML += `Shop Name: ${shopname}<br>`;
 }
 
         function undoSelection() {
