@@ -408,6 +408,7 @@
             
         ];
 
+
         document.addEventListener('DOMContentLoaded', function() {
             const performanceItems = document.getElementById('performanceItems');
             const cosmeticItems = document.getElementById('cosmeticItems');
@@ -603,53 +604,48 @@ darkModeToggle.addEventListener('click', () => {
 document.getElementById('sendLogButton').addEventListener('click', sendDiscordLog);
 
 function sendDiscordLog() {
-    // Collect the customer and vehicle info
     const customerName = document.getElementById('customerName').value;
     const ftoName = document.getElementById('ftoName').value || 'N/A'; // Default to 'N/A' if empty
     const plateNumber = document.getElementById('plateNumber').value;
     const vehicleModel = document.getElementById('vehicleModel').value;
     const shopname = document.getElementById('shopname').value;
 
-    // Example data for selected items (you can customize as needed)
-    const selectedItems = [
-        { name: 'P Respray', price: 500 },
-        { name: 'S Respray', price: 400 }
-    ];
-
-    // Collect selected items
-    let selectedItemsList = selectedItems.map(item => item.name).join(', ');
-
-    // Handle special logic if both P and S resprays are selected
-    const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
-    const sRespraySelected = selectedItems.some(item => item.name === 'S Respray');
-
-    if (pRespraySelected && sRespraySelected) {
-        selectedItemsList = selectedItemsList.replace('P Respray', 'P/S Respray');
-        selectedItemsList = selectedItemsList.replace(', S Respray', '');
-    }
-
-    // Calculate the total price
+    // Calculate the total price from the selected items
     let total = selectedItems.reduce((sum, item) => sum + item.price, 0);
 
     // Format the total price with commas
     const formattedTotal = total.toLocaleString();
 
-    // Create the message for Discord
-    const message = {
-        content: `**New Repair Order**\n\n` +
-                 `**Customer Name**: ${customerName}\n` +
-                 `**FTO Name**: ${ftoName}\n` +
-                 `**Vehicle | Make/Model**: ${vehicleModel}\n` +
-                 `**Plate**: ${plateNumber}\n` +
-                 `**Upgrades Purchased**: ${selectedItemsList}\n` +
-                 `**Price Charged**: $${formattedTotal}\n` +
-                 `**Shop Name**: ${shopname}\n` 
-    };
+    // Handle selected items list
+    let selectedItemsList = selectedItems.map(item => item.name).join(', ');
 
-    // Log the message to the console to debug
+    // Handle special case if both "P Respray" and "S Respray" are selected
+    const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
+    const sRespraySelected = selectedItems.some(item => item.name === 'S Respray');
+
+    // If both P and S Respray are selected, combine them into "P/S Respray"
+    if (pRespraySelected && sRespraySelected) {
+        selectedItemsList = selectedItemsList.replace('P Respray', 'P/S Respray');
+        selectedItemsList = selectedItemsList.replace(', S Respray', ''); // Remove "S Respray"
+    }
+
+    // Create the message for Discord
+const message = {
+    content: 
+        "```\n" + // Start of the code block with triple backticks
+        `WORK LOG\n\n` +
+        `Customer Name: ${customerName}\n` +
+        `Vehicle | Make/Model: ${vehicleModel}\n` +
+        `Plate: ${plateNumber}\n` +
+        `Upgrades Purchased: ${selectedItemsList}\n` +
+        `Price Charged: $${formattedTotal}\n` +
+        `Shop Name: ${shopname}\n` +
+        "```" // End of the code block with triple backticks
+};
+    // Log the message to the console for debugging
     console.log('Sending to Discord:', message);
 
-    // Send the message to the Discord webhook
+    // Send the message to Discord
     fetch('https://discord.com/api/webhooks/1319466105768509470/dCwqFJ6mI_eBQAWs4iSqTlS0fxSZObgDRVb9-TgvoUv0MdVr-J4l8okcjI0WbxA0nDZ4', {
         method: 'POST',
         headers: {
@@ -658,11 +654,10 @@ function sendDiscordLog() {
         body: JSON.stringify(message)
     })
     .then(response => {
-        console.log('Response status:', response.status);  // Check the response status
         if (response.ok) {
             alert('Log successfully sent to Discord!');
         } else {
-            alert('Failed to send log to Discord. Please try again later.');
+            alert('Failed to send log to Discord.');
         }
     })
     .catch(error => {
@@ -670,6 +665,7 @@ function sendDiscordLog() {
         alert('An error occurred while sending the log.');
     });
 }
+
 </script>
 
 </body>
