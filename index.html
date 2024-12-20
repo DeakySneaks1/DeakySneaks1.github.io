@@ -608,6 +608,7 @@ function sendDiscordLog() {
     const ftoName = document.getElementById('ftoName').value || 'N/A'; // Default to 'N/A' if empty
     const plateNumber = document.getElementById('plateNumber').value;
     const vehicleModel = document.getElementById('vehicleModel').value;
+    const shopname = document.getElementById('shopname').value;
 
     // Example data for selected items (you can customize as needed)
     const selectedItems = [
@@ -642,7 +643,7 @@ function sendDiscordLog() {
                  `**Plate**: ${plateNumber}\n` +
                  `**Upgrades Purchased**: ${selectedItemsList}\n` +
                  `**Price Charged**: $${formattedTotal}\n` +
-                 `**SHOP**: Mirror Park Repairs`
+                 `**Shop Name**: ${shopname}\n` 
     };
 
     // Log the message to the console to debug
