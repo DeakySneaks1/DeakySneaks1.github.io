@@ -1,94 +1,223 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mirror Park Repairs</title>
+    <title>Car Engine Swap</title>
     <style>
         body {
-            background-color: #cbf1ff; /* Light pink */
-            margin-bottom: 40px; /* Add space for the footer */
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .total {
-            font-weight: bold;
-        }
-        button {
-            background-color: #F5F569; /* Light yellow */
-            border: none;
-            color: black;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-        }
-        .collapsible {
-            background-color: #f2f2f2;
-            color: black;
-            cursor: pointer;
-            padding: 18px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            outline: none;
-            font-size: 15px;
-        }
-        .active, .collapsible:hover {
-            background-color: #ccc;
-        }
-        .content {
-            padding: 0 18px;
-            display: none;
-            overflow: hidden;
-            background-color: #f2f2f2;
-        }
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #f2f2f2;
-            text-align: center;
-            padding: 5px 0;
-            font-size: 12px;
-        }
-        .header {
-            background-image: url('https://media.discordapp.net/attachments/1228023438728237191/1245635389511831583/Untitled_1080_x_1080_px_3.png?ex=666de71b&is=666c959b&hm=512ba9fd95e38eb6b028cdb2fbd191f5696cb5c4e931cacc2705ac949d1f6b5c&=&format=webp&quality=lossless');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            height: 100px; /* Adjust height as needed */
-            text-align: center;
-            padding-top: 20px; /* Adjust top padding to center vertically */
-            padding-bottom: 20px; /* Add padding under the header image */
-        }
-        .header h1 {
-            color: white;
-            font-size: 36px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f9;
+            color: #333;
             margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            background: #444;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        nav a {
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            text-align: center;
+            border: 1px solid #444;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            cursor: pointer;
+        }
+        nav a.active {
+            background-color: #333;
+            border-color: #333;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .category {
+            margin-bottom: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        .category h2 {
+            margin-top: 0;
+        }
+        .category ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            display: none; /* Initially hidden */
+        }
+        #search {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <header>
         <h1></h1>
+    </header>
+    <nav>
+        <a href="#" class="active" onclick="switchTab(event, 'tab1')">Engine Swaps</a>
+        <a href="#" onclick="switchTab(event, 'tab2')">Logs</a>
+    </nav>
+    <div class="container content" id="tab1">
+        <input type="text" id="search" placeholder="Search by vehicle make..." oninput="searchVehicles()">
+        <div class="category" id="I4TurboCategory">
+            <h2 onclick="toggleCategory(this)">I4 Turbo 2.5L Engine</h2>
+            <ul>
+                <li>Club</li>
+                <li>Blista Go Go Monkey</li>
+                <li>Golpher 8</li>
+                <li>Super Diamond</li>
+                <li>Tailgater S</li>
+                <li>Lampadati</li>
+                <li>Astron</li>
+                <li>Jubilee</li>
+                <li>Percedes Tourer 93</li>
+                <li>Leicester S</li>
+                <li>Baller LE LWB</li>
+                <li>Novak</li>
+                <li>Rebla GTS</li>
+                <li>Magnum</li>
+                <li>Percedes LG36</li>
+                <li>V'ulva 90</li>
+                <li>Futo</li>
+                <li>Dominator</li>
+                <li>Dukes</li>
+                <li>Gauntlet</li>
+                <li>Ruiner</li>
+                <li>Slam Van Custom</li>
+                <li>Yosemite</li>
+                <li>Stirling GT</li>
+                <li>GT500</li>
+                <li>Infernus Classic</li>
+                <li>JB 700</li>
+                <li>190Z</li>
+                <li>Coquette Classic</li>
+                <li>Jester Classic</li>
+                <li>Penumbra FF</li>
+                <li>Sultan Classic Custom</li>
+                <li>Akuma</li>
+                <li>Cliffhanger</li>
+                <li>Dubsta 6x6</li>
+                <li>Draugur</li>
+                <li>Magnum 6x6</li>
+            </ul>
+        </div>
+        <div class="category" id="V6Category">
+            <h2 onclick="toggleCategory(this)">V6 3.3L Engine</h2>
+            <ul>
+                <li>Issi Sport</li>
+                <li>Deity</li>
+                <li>Dominated</li>
+                <li>EX 66</li>
+                <li>EV1L Is</li>
+                <li>FR36</li>
+                <li>Emile Bean 2.0</li>
+                <li>Citizen</li>
+                <li>Sentinel GTS</li>
+                <li>Dominator ASP</li>
+                <li>Buffalo STX</li>
+                <li>Deevo</li>
+                <li>Dukes Eagle</li>
+                <li>Comet Retro Custom</li>
+                <li>8f Drafter</li>
+                <li>Feltzer</li>
+                <li>Flash GT</li>
+                <li>GB 200</li>
+                <li>Jester</li>
+                <li>Kuruma</li>
+                <li>9F</li>
+                <li>Omnis</li>
+                <li>Tropos Rallye</li>
+                <li>Calico GTF</li>
+                <li>Euros</li>
+                <li>Cypher</li>
+                <li>Sultan RS</li>
+                <li>Sentinel Classic Widebody</li>
+                <li>Issi Rally</li>
+                <li>300R</li>
+                <li>Bati 801</li>
+                <li>Carbon RS</li>
+                <li>Manchez Scout</li>
+                <li>Bati 901</li>
+                <li>Brawler</li>
+                <li>Percedes Brassiere</li>
+                <li>Trophy Truck</li>
+                <li>Desert Raid</li>
+                <li>Niobe 21</li>
+                <li>Pariah</li>
+                <li>Solace</li>
+                <li>Deevo WideBooty 2</li>
+            </ul>
+        </div>
+        <div class="category" id="V8Category">
+            <h2 onclick="toggleCategory(this)">V8 6.5L Engine</h2>
+            <ul>
+                <li>Vigero ZX</li>
+                <li>Buffalo HellKitten</li>
+                <li>Gauntlet HellMeow</li>
+                <li>Dominator Attack</li>
+                <li>Dominator Snake</li>
+                <li>Dominator GT Shadow</li>
+                <li>Elegy Retro Custom</li>
+                <li>Itali GTO</li>
+                <li>Jugular</li>
+                <li>V-STR</li>
+                <li>Comet GT Race</li>
+                <li>10F Widebody</li>
+                <li>Itali GTB Custom</li>
+                <li>Champion</li>
+                <li>Turismo R</li>
+                <li>zentorno</li>
+                <li>Bati 801RR</li>
+                <li>Hakuchou</li>
+                <li>OB R1</li>
+            </ul>
+        </div>
+        <div class="category" id="V12Category">
+            <h2 onclick="toggleCategory(this)">V12 6.0L Engine</h2>
+            <ul>
+                <li>Taurus Mansaurus</li>
+                <li>Whiskey RT</li>
+                <li>ETR1</li>
+                <li>Tyrus</li>
+                <li>FMJ 17</li>
+                <li>Itali I19</li>
+                <li>Typhoon</li>
+                <li>Dracula Rouge</li>
+                <li>Cobra LB</li>
+                <li>Prospero</li>
+                <li>Itali Neon</li>
+                <li>Nero Neon</li>
+                <li>Hakuchou Drag</li>
+                <li>Bati Gala</li>
+            </ul>
+        </div>
     </div>
-    
-    <h2>Mirror Park Repairs</h2>
+
+   <div class="container content" id="tab2">
+        <input type="text" id="search" placeholder="Search by vehicle make..." oninput="searchVehicles()">
+        <div class="category" id="I4TurboCategory">
     <form id="inventoryForm">
         <label for="customerName">Customer Name:</label>
         <input type="text" id="customerName" name="customerName" required><br><br>
@@ -163,7 +292,7 @@
         <!-- Add more categories -->
 
         <br>
-        <button type="button" onclick="calculateTotal()">Calculate Total</button>
+        <button type="button" onclick="calculateTotal()">Print Log</button>
         <button type="button" onclick="clearCustomerInfo()">Clear Customer Info</button>
         <button type="button" onclick="clearItems()">Clear Items</button>
         <button type="button" onclick="undoSelection()">Undo</button>
@@ -396,6 +525,50 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        function searchVehicles() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const categories = document.querySelectorAll('.category');
+
+            categories.forEach(category => {
+                const items = category.querySelectorAll('li');
+                let hasMatch = false;
+
+                items.forEach(item => {
+                    if (item.textContent.toLowerCase().includes(searchTerm)) {
+                        item.style.display = '';
+                        hasMatch = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                category.style.display = hasMatch ? '' : 'none';
+            });
+        }
+
+        function toggleCategory(header) {
+            const category = header.parentElement;
+            const list = category.querySelector('ul');
+            list.style.display = list.style.display === 'none' || list.style.display === '' ? 'block' : 'none';
+        }
+
+        function switchTab(event, contentId) {
+            const tabs = document.querySelectorAll('nav a');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => content.style.display = 'none');
+            document.getElementById(contentId).style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Show "Engine Inventory" tab by default
+            document.getElementById('tab1').style.display = 'block';
+        });
     </script>
 </body>
 </html>
