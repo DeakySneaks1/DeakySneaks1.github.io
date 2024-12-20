@@ -244,6 +244,8 @@
         <input type="text" id="plateNumber" name="plateNumber" required><br><br>
         <label for="vehicleModel">Vehicle Model:</label>
         <input type="text" id="vehicleModel" name="vehicleModel" required><br><br>
+        <label for="shopname">Shop Name:</label>
+        <input type="text" id="shopname" name="shopname" required><br><br>
 
         <input type="text" id="search" placeholder="Search items by name" onkeyup="searchItems()">
         
@@ -462,6 +464,38 @@
       function calculateTotal() {
     let total = 0;
 
+function sendToDiscord() {
+            const customerName = document.getElementById('customerName').value;
+            const ftoName = document.getElementById('ftoName').value;
+            const plateNumber = document.getElementById('plateNumber').value;
+            const vehicleModel = document.getElementById('vehicleModel').value;
+            const total = selectedItems.reduce((sum, item) => sum + item.price, 0);
+            const formattedTotal = total.toLocaleString();
+            const upgrades = selectedItems.map(item => item.name).join(', ');
+
+            const logMessage = `
+                **Mirror Park Repairs Log**
+                Customer Name: ${customerName}
+                FTO Name: ${ftoName || 'N/A'}
+                Vehicle Model: ${vehicleModel}
+                Plate Number: ${plateNumber}
+                Upgrades: ${upgrades}
+                Total Price: $${formattedTotal}
+            `;
+
+            fetch('https://discord.com/api/webhooks/1319466105768509470/dCwqFJ6mI_eBQAWs4iSqTlS0fxSZObgDRVb9-TgvoUv0MdVr-J4l8okcjI0WbxA0nDZ4', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: logMessage }),
+            })
+            .then(response => response.json())
+            .then(data => console.log('Message sent to Discord:', data))
+            .catch(error => console.error('Error sending message to Discord:', error));
+        }
+
+
     // Calculate total price
     selectedItems.forEach(item => {
         total += item.price;
@@ -488,6 +522,7 @@
     const ftoName = document.getElementById('ftoName').value;
     const plateNumber = document.getElementById('plateNumber').value;
     const vehicleModel = document.getElementById('vehicleModel').value;
+    const shopname = document.getElementById('shopname').value;
 
     summary.innerHTML = `Customer Name: ${customerName}<br>`;
     if (ftoName.trim() !== '') {
@@ -497,7 +532,8 @@
     summary.innerHTML += `Plate: ${plateNumber}<br>`;
     summary.innerHTML += `Upgrades Purchased: ${upgrades}<br>`;
     summary.innerHTML += `Price Charged: $${formattedTotal}<br>`;
-    summary.innerHTML += `SHOP: Mirror Park Repairs<br>`;
+    summary.innerHTML += `Shop Name: ${shopname}<br>`;
+    
 }
 
         function undoSelection() {
@@ -512,6 +548,7 @@
             document.getElementById('ftoName').value = '';
             document.getElementById('plateNumber').value = '';
             document.getElementById('vehicleModel').value = '';
+            document.getElementById('shopname').value = '';
             calculateTotal();
         }
 
