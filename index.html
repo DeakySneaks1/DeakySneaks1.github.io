@@ -311,6 +311,7 @@
         <!-- Add more categories -->
 
         <br>
+        <button type="button" onclick="sendDiscordLog()">Send Discord Log</button>
         <button type="button" onclick="calculateTotal()">Print Log</button>
         <button type="button" onclick="clearCustomerInfo()">Clear Customer Info</button>
         <button type="button" onclick="clearItems()">Clear Items</button>
@@ -464,37 +465,66 @@
       function calculateTotal() {
     let total = 0;
 
-function sendToDiscord() {
-            const customerName = document.getElementById('customerName').value;
-            const ftoName = document.getElementById('ftoName').value;
-            const plateNumber = document.getElementById('plateNumber').value;
-            const vehicleModel = document.getElementById('vehicleModel').value;
-            const total = selectedItems.reduce((sum, item) => sum + item.price, 0);
-            const formattedTotal = total.toLocaleString();
-            const upgrades = selectedItems.map(item => item.name).join(', ');
+function sendDiscordLog() {
+    // Collect the customer and vehicle info
+    const customerName = document.getElementById('customerName').value;
+    const ftoName = document.getElementById('ftoName').value;
+    const plateNumber = document.getElementById('plateNumber').value;
+    const vehicleModel = document.getElementById('vehicleModel').value;
 
-            const logMessage = `
-                **Mirror Park Repairs Log**
-                Customer Name: ${customerName}
-                FTO Name: ${ftoName || 'N/A'}
-                Vehicle Model: ${vehicleModel}
-                Plate Number: ${plateNumber}
-                Upgrades: ${upgrades}
-                Total Price: $${formattedTotal}
-            `;
+    // Collect selected items
+    let selectedItemsList = selectedItems.map(item => item.name).join(', ');
 
-            fetch('https://discord.com/api/webhooks/1319466105768509470/dCwqFJ6mI_eBQAWs4iSqTlS0fxSZObgDRVb9-TgvoUv0MdVr-J4l8okcjI0WbxA0nDZ4', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ content: logMessage }),
-            })
-            .then(response => response.json())
-            .then(data => console.log('Message sent to Discord:', data))
-            .catch(error => console.error('Error sending message to Discord:', error));
+    // Special handling for resprays (if both P Respray and S Respray are selected)
+    const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
+    const sRespraySelected = selectedItems.some(item => item.name === 'S Respray');
+
+    if (pRespraySelected && sRespraySelected) {
+        selectedItemsList = selectedItemsList.replace('P Respray', 'P/S Respray');
+        selectedItemsList = selectedItemsList.replace(', S Respray', '');
+    }
+
+    // Calculate the total price
+    let total = 0;
+    selectedItems.forEach(item => {
+        total += item.price;
+    });
+
+    // Format the total price with commas
+    const formattedTotal = total.toLocaleString();
+
+    // Create the message for Discord
+    const message = {
+        content: `**New Repair Order**\n\n` +
+                 `**Customer Name**: ${customerName}\n` +
+                 `**FTO Name**: ${ftoName ? ftoName : 'N/A'}\n` +
+                 `**Vehicle | Make/Model**: ${vehicleModel}\n` +
+                 `**Plate**: ${plateNumber}\n` +
+                 `**Upgrades Purchased**: ${selectedItemsList}\n` +
+                 `**Price Charged**: $${formattedTotal}\n` +
+                 ``
+    };
+
+    // Send the message to the Discord webhook
+    fetch('https://discord.com/api/webhooks/1319466105768509470/dCwqFJ6mI_eBQAWs4iSqTlS0fxSZObgDRVb9-TgvoUv0MdVr-J4l8okcjI0WbxA0nDZ4', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Log successfully sent to Discord!');
+        } else {
+            alert('Failed to send log to Discord. Please try again later.');
         }
-
+    })
+    .catch(error => {
+        console.error('Error sending log to Discord:', error);
+        alert('An error occurred while sending the log.');
+    });
+}
 
     // Calculate total price
     selectedItems.forEach(item => {
