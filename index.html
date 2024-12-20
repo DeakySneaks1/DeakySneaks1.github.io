@@ -238,8 +238,8 @@
     <form id="inventoryForm">
         <label for="customerName">Customer Name:</label>
         <input type="text" id="customerName" name="customerName" required><br><br>
-        <label for="ftoName">FTO Name:</label>
-        <input type="text" id="ftoName" name="ftoName"><br><br>
+        <label for="mechname">Mechanic:</label>
+        <input type="text" id="mechname" name="mechname"><br><br>
         <label for="plateNumber">Plate Number:</label>
         <input type="text" id="plateNumber" name="plateNumber" required><br><br>
         <label for="vehicleModel">Vehicle Model:</label>
@@ -490,14 +490,14 @@
     }
 
     const customerName = document.getElementById('customerName').value;
-    const ftoName = document.getElementById('ftoName').value;
+    const mechname = document.getElementById('mechname').value;
     const plateNumber = document.getElementById('plateNumber').value;
     const vehicleModel = document.getElementById('vehicleModel').value;
     const shopname = document.getElementById('shopname').value;
 
     summary.innerHTML = `Customer Name: ${customerName}<br>`;
-    if (ftoName.trim() !== '') {
-        summary.innerHTML += `FTO Name: ${ftoName}<br>`;
+    if (mechname.trim() !== '') {
+        summary.innerHTML += `mechname: ${mechname}<br>`;
     }
     summary.innerHTML += `Vehicle | Make/Model: ${vehicleModel}<br>`;
     summary.innerHTML += `Plate: ${plateNumber}<br>`;
@@ -516,7 +516,7 @@
 
         function clearCustomerInfo() {
             document.getElementById('customerName').value = '';
-            document.getElementById('ftoName').value = '';
+            document.getElementById('mechname').value = '';
             document.getElementById('plateNumber').value = '';
             document.getElementById('vehicleModel').value = '';
             document.getElementById('shopname').value = '';
@@ -605,7 +605,7 @@ document.getElementById('sendLogButton').addEventListener('click', sendDiscordLo
 
 function sendDiscordLog() {
     const customerName = document.getElementById('customerName').value;
-    const ftoName = document.getElementById('ftoName').value || 'N/A'; // Default to 'N/A' if empty
+    const mechname = document.getElementById('mechname').value || 'N/A'; // Default to 'N/A' if empty
     const plateNumber = document.getElementById('plateNumber').value;
     const vehicleModel = document.getElementById('vehicleModel').value;
     const shopname = document.getElementById('shopname').value;
@@ -630,23 +630,51 @@ function sendDiscordLog() {
     }
 
     // Create the message for Discord
-const message = {
-    content: 
-        "```\n" + // Start of the code block with triple backticks
-        `WORK LOG\n\n` +
-        `Customer Name: ${customerName}\n` +
-        `Vehicle | Make/Model: ${vehicleModel}\n` +
-        `Plate: ${plateNumber}\n` +
-        `Upgrades Purchased: ${selectedItemsList}\n` +
-        `Price Charged: $${formattedTotal}\n` +
-        `Shop Name: ${shopname}\n` +
-        "```" // End of the code block with triple backticks
-};
+    const message = {
+        content: 
+            "```\n" + // Start of the code block with triple backticks
+            `WORK LOG\n\n` +
+            `Customer Name: ${customerName}\n` +
+            `Vehicle | Make/Model: ${vehicleModel}\n` +
+            `Mechanics Name: ${mechname}\n` +
+            `Plate: ${plateNumber}\n` +
+            `Upgrades Purchased: ${selectedItemsList}\n` +
+            `Price Charged: $${formattedTotal}\n` +
+            `Shop Name: ${shopname}\n` +
+            "```" // End of the code block with triple backticks
+    };
+
+    // Map shop names to specific webhook URLs
+    const webhookURLs = {
+        'Bennys': 'https://discord.com/api/webhooks/1319509379690528778/5mhfrEqvQN7LNWdZ0oK5HicV9OrQE8WB-4X_OGeN_7pjqn49U4gcqTGobz7NVNEdVrP7',
+        'Tuners': 'https://discord.com/api/webhooks/1319509428680130612/1-P8OJ6QX9CBivTBwbA1Py93pmgl4rfpZV5Iq3Nqg1OIhggTOwedn4TU7oBJlr7-VU4b',
+        'Stance': 'https://discord.com/api/webhooks/1319509313634697238/o8XwN7Hhl4zARvCGLr6xAaXZypdcnn2rg0vSxSlWEeONvhknAvwezUbive0Klf4QwYTq',
+        // Add more shops and webhooks as needed
+    };
+
+    // Determine the appropriate webhook URL based on the shop name
+   const shopWebhookURL = webhookURLs[shopname];
+
+    // Main/general webhook URL that should always receive the log
+    const mainWebhookURL = 'https://discord.com/api/webhooks/1319510110120312956/MFhz8lm5pQsXO4Gu6PP5vdJBLy9xHkZbQbUD9NtIBJd7O2M37IMqmsB_IFfR3F5gfHgO';
+
     // Log the message to the console for debugging
     console.log('Sending to Discord:', message);
 
-    // Send the message to Discord
-    fetch('https://discord.com/api/webhooks/1319466105768509470/dCwqFJ6mI_eBQAWs4iSqTlS0fxSZObgDRVb9-TgvoUv0MdVr-J4l8okcjI0WbxA0nDZ4', {
+    // Send the message to the general webhook (always send)
+    sendLogToWebhook(mainWebhookURL, message);
+
+    // If a shop-specific webhook is found, send the message there as well
+    if (shopWebhookURL) {
+        sendLogToWebhook(shopWebhookURL, message);
+    } else {
+        console.log('No specific webhook found for this shop.');
+    }
+}
+
+// Function to send the log to a webhook URL
+function sendLogToWebhook(webhookURL, message) {
+    fetch(webhookURL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -655,14 +683,13 @@ const message = {
     })
     .then(response => {
         if (response.ok) {
-            alert('Log successfully sent to Discord!');
+            console.log('Log successfully sent to webhook:', webhookURL);
         } else {
-            alert('Failed to send log to Discord.');
+            console.error('Failed to send log to webhook:', webhookURL);
         }
     })
     .catch(error => {
-        console.error('Error sending log to Discord:', error);
-        alert('An error occurred while sending the log.');
+        console.error('Error sending log to webhook:', error);
     });
 }
 
