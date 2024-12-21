@@ -621,6 +621,8 @@ function sendDiscordLog() {
 
     // Format the total price with commas
     const formattedTotal = total.toLocaleString();
+    
+     const manualTotal = document.getElementById('manualTotal').value;
 
     // Handle selected items list
     let selectedItemsList = selectedItems.map(item => item.name).join(', ');
@@ -645,7 +647,7 @@ function sendDiscordLog() {
             `Mechanics Name: ${mechname}\n` +
             `Plate: ${plateNumber}\n` +
             `Upgrades Purchased: ${selectedItemsList}\n` +
-            `Price Charged: $${formattedTotal}\n` +
+            `Price Charged (Manual): $${manualTotal}\n` +
             `Shop Name: ${shopname}\n` +
             "```" // End of the code block with triple backticks
     };
