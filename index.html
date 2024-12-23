@@ -231,8 +231,43 @@
         }
         
     </style>
+    
 </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
 
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+    </style>
+    <title>Tooltip Example</title>
+</head>
+<body>
        
         <div class="category" id="I4TurboCategory">
     <form id="inventoryForm">
@@ -246,6 +281,9 @@
         <input type="text" id="vehicleModel" name="vehicleModel" required><br><br>
         <label for="shopname">Shop Name:</label>
         <input type="text" id="shopname" name="shopname" required><br><br>
+        <button id="mechDiscountToggle" class="tooltip" data-tooltip="Must be selected first">Apply [MECH] Discount</button>
+        
+
       
 
 
@@ -313,11 +351,13 @@
         <!-- Add more categories -->
 
         <br>
-        <button type="button" onclick="sendDiscordLog()">Send Discord Log</button>
-        <button type="button" onclick="calculateTotal()">Print Log</button>
-        <button type="button" onclick="clearCustomerInfo()">Clear Customer Info</button>
-        <button type="button" onclick="clearItems()">Clear Items</button>
-        <button type="button" onclick="undoSelection()">Undo</button>
+        <button type="button" onclick="clearCustomerInfo()" class="styled-button">Clear Customer Info</button>
+<button type="button" onclick="clearItems()" class="styled-button">Clear Items</button>
+<button type="button" onclick="undoSelection()" class="styled-button">Undo</button>
+<button type="button" onclick="calculateTotal()" class="styled-button">Print Log</button>
+<button type="button" onclick="sendDiscordLog()" class="styled-button">Send Discord Log</button>
+
+      
     </form>
     <br>
     <div id="summary"></div>
@@ -325,6 +365,9 @@
     <footer>Copyright 2024 Jade City Mech Command All rights reserved.</footer>
 
     <script>
+    
+     let isMechDiscountApplied = false;
+
         const items = [
             
            
@@ -438,15 +481,17 @@ document.querySelectorAll('.collapsible').forEach(button => {
 function calculateTotal() {
     let total = selectedItems.reduce((sum, item) => sum + item.price, 0);
 
-    // Format total with commas
-    const formattedTotal = total.toLocaleString();
+    // Apply a 35% discount if the mechanic discount is applied
+    if (isMechDiscountApplied) {
+        total *= 0.65; // 65% of the original price
+    }
 
+    const formattedTotal = total.toLocaleString();
     const summary = document.getElementById('summary');
     summary.innerHTML = '';
 
     let upgrades = selectedItems.map(item => item.name).join(', ');
 
-    // Special case: If both "P Respray" and "S Respray" are selected, show as "P/S Respray"
     const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
     const sRespraySelected = selectedItems.some(item => item.name === 'S Respray');
 
@@ -461,7 +506,7 @@ function calculateTotal() {
     const vehicleModel = document.getElementById('vehicleModel').value;
     const shopname = document.getElementById('shopname').value;
 
-    summary.innerHTML = `Customer Name: ${customerName}<br>`;
+    summary.innerHTML = `Customer Name: ${isMechDiscountApplied ? '[MECH] ' : ''}${customerName}<br>`;
     if (mechname.trim() !== '') {
         summary.innerHTML += `Mechanic Name: ${mechname}<br>`;
     }
@@ -518,6 +563,10 @@ function clearItems() {
     </script>
 
     <script>
+       
+    
+
+       
         function searchVehicles() {
             const searchTerm = document.getElementById('search').value.toLowerCase();
             const categories = document.querySelectorAll('.category');
@@ -538,6 +587,17 @@ function clearItems() {
                 category.style.display = hasMatch ? '' : 'none';
             });
         }
+        
+        document.getElementById('mechDiscountToggle').addEventListener('click', () => {
+    isMechDiscountApplied = !isMechDiscountApplied;
+
+    // Update button text based on toggle state
+    const button = document.getElementById('mechDiscountToggle');
+    button.textContent = isMechDiscountApplied ? 'Remove [MECH] Discount' : 'Apply [MECH] Discount';
+
+    // Recalculate total price
+    calculateTotal();
+});
 
         function toggleCategory(header) {
             const category = header.parentElement;
@@ -557,7 +617,7 @@ function clearItems() {
 
         document.addEventListener('DOMContentLoaded', () => {
             // Show "Engine Inventory" tab by default
-            document.getElementById('tab1').style.display = 'block';
+            document.getElementById('tab2').style.display = 'block';
         });
         const darkModeToggle = document.getElementById('darkModeToggle');
 
@@ -565,9 +625,8 @@ darkModeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 });
     </script>
+   
     <script>
-document.getElementById('sendLogButton').addEventListener('click', sendDiscordLog);
-
 function sendDiscordLog() {
     const customerName = document.getElementById('customerName').value;
     const mechname = document.getElementById('mechname').value || 'N/A'; // Default to 'N/A' if empty
@@ -578,10 +637,13 @@ function sendDiscordLog() {
     // Calculate the total price from the selected items
     let total = selectedItems.reduce((sum, item) => sum + item.price, 0);
 
+    // Apply a 35% discount if the mechanic discount is applied
+    if (isMechDiscountApplied) {
+        total *= 0.65; // 65% of the original price
+    }
+
     // Format the total price with commas
     const formattedTotal = total.toLocaleString();
-    
-     const manualTotal = document.getElementById('manualTotal').value;
 
     // Handle selected items list
     let selectedItemsList = selectedItems.map(item => item.name).join(', ');
@@ -596,17 +658,20 @@ function sendDiscordLog() {
         selectedItemsList = selectedItemsList.replace(', S Respray', ''); // Remove "S Respray"
     }
 
+    // Add [MECH] to customer name if the discount is applied
+    const finalCustomerName = isMechDiscountApplied ? `[MECH] ${customerName}` : customerName;
+
     // Create the message for Discord
     const message = {
         content: 
             "```\n" + // Start of the code block with triple backticks
             `WORK LOG\n\n` +
-            `Customer Name: ${customerName}\n` +
+            `Customer Name: ${finalCustomerName}\n` +
             `Vehicle | Make/Model: ${vehicleModel}\n` +
             `Mechanics Name: ${mechname}\n` +
             `Plate: ${plateNumber}\n` +
             `Upgrades Purchased: ${selectedItemsList}\n` +
-            `Price Charged : $${formattedTotal}\n` +
+            `Price Charged: $${formattedTotal}\n` +
             `Shop Name: ${shopname}\n` +
             "```" // End of the code block with triple backticks
     };
@@ -620,7 +685,7 @@ function sendDiscordLog() {
     };
 
     // Determine the appropriate webhook URL based on the shop name
-   const shopWebhookURL = webhookURLs[shopname];
+    const shopWebhookURL = webhookURLs[shopname];
 
     // Main/general webhook URL that should always receive the log
     const mainWebhookURL = 'https://discord.com/api/webhooks/1319510110120312956/MFhz8lm5pQsXO4Gu6PP5vdJBLy9xHkZbQbUD9NtIBJd7O2M37IMqmsB_IFfR3F5gfHgO';
@@ -659,7 +724,6 @@ function sendLogToWebhook(webhookURL, message) {
         console.error('Error sending log to webhook:', error);
     });
 }
-
 </script>
 
 </body>
