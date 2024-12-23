@@ -429,7 +429,6 @@
             
         ];
 
-
 document.addEventListener('DOMContentLoaded', function () {
     const performanceItems = document.getElementById('performanceItems');
     const cosmeticItems = document.getElementById('cosmeticItems');
@@ -446,7 +445,18 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const itemName = this.getAttribute('data-name');
             const itemPrice = parseInt(this.getAttribute('data-price'));
-            selectedItems.push({ name: itemName, price: itemPrice });
+
+            // Check if the item already exists in selectedItems
+            let existingItem = selectedItems.find(selectedItem => selectedItem.name === itemName);
+            
+            if (existingItem) {
+                // If the item exists, increment the quantity
+                existingItem.count += 1;
+            } else {
+                // If the item doesn't exist, add it with a count of 1
+                selectedItems.push({ name: itemName, price: itemPrice, count: 1 });
+            }
+
             calculateTotal();
         });
 
@@ -470,18 +480,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-const selectedItems = [];
-
-document.querySelectorAll('.collapsible').forEach(button => {
-    button.addEventListener('click', function () {
-        this.classList.toggle('active');
-        const content = this.nextElementSibling;
+// Event Delegation for collapsible elements
+document.body.addEventListener('click', function (event) {
+    if (event.target && event.target.classList.contains('collapsible')) {
+        event.target.classList.toggle('active');
+        const content = event.target.nextElementSibling;
         content.style.display = content.style.display === 'block' ? 'none' : 'block';
-    });
+    }
 });
 
+const selectedItems = [];
+
+// Update the total calculation to account for the item count
 function calculateTotal() {
-    let total = selectedItems.reduce((sum, item) => sum + item.price, 0);
+    let total = selectedItems.reduce((sum, item) => sum + (item.price * item.count), 0);
 
     // Apply a 35% discount if the mechanic discount is applied
     if (isMechDiscountApplied) {
@@ -492,7 +504,7 @@ function calculateTotal() {
     const summary = document.getElementById('summary');
     summary.innerHTML = '';
 
-    let upgrades = selectedItems.map(item => item.name).join(', ');
+    let upgrades = selectedItems.map(item => `${item.name} x ${item.count}`).join(', ');
 
     const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
     const sRespraySelected = selectedItems.some(item => item.name === 'S Respray');
@@ -518,6 +530,7 @@ function calculateTotal() {
     summary.innerHTML += `Shop Name: ${shopname}<br>`;
     summary.innerHTML += `Price Charged: $${formattedTotal}<br>`;
 }
+
 
 function undoSelection() {
     if (selectedItems.length > 0) {
@@ -637,7 +650,7 @@ function sendDiscordLog() {
     const shopname = document.getElementById('shopname').value;
 
     // Calculate the total price from the selected items
-    let total = selectedItems.reduce((sum, item) => sum + item.price, 0);
+    let total = selectedItems.reduce((sum, item) => sum + (item.price * item.count), 0);
 
     // Apply a 35% discount if the mechanic discount is applied
     if (isMechDiscountApplied) {
@@ -647,8 +660,8 @@ function sendDiscordLog() {
     // Format the total price with commas
     const formattedTotal = total.toLocaleString();
 
-    // Handle selected items list
-    let selectedItemsList = selectedItems.map(item => item.name).join(', ');
+    // Handle selected items list with quantities
+    let selectedItemsList = selectedItems.map(item => `${item.name} x ${item.count}`).join(', ');
 
     // Handle special case if both "P Respray" and "S Respray" are selected
     const pRespraySelected = selectedItems.some(item => item.name === 'P Respray');
@@ -682,7 +695,7 @@ function sendDiscordLog() {
     const webhookURLs = {
         'Bennys': 'https://discord.com/api/webhooks/1319519817442660414/KhBih1B7xImoJOZN5w1pHrFKcZ2AmtERj8Odx-i5OzLyXj2Qwe4quzbqUUdxuFB6lvAN',
         'Tuners': 'https://discord.com/api/webhooks/1319528987969585152/uHCKIY95eSLbbXKf3vLRUeW_XXVEGSk6YUk5oDl362FU8ztohEKodLfiNspTgHd1wiSP',
-        'Stance': 'https://discord.com/api/webhooks/1319783526995988631/E0W3QPmCcgJL3xciVRKTs0hrxcH9Ud9nhLlCbw911f4nuKfwLjdvSdY7yWZKpRrIY0rf',
+        'Stance': 'https://discord.com/api/webhooks/1319509313634697238/o8XwN7Hhl4zARvCGLr6xAaXZypdcnn2rg0vSxSlWEeONvhknAvwezUbive0Klf4QwYTq',
         // Add more shops and webhooks as needed
     };
 
