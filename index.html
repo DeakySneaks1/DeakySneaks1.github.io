@@ -233,7 +233,7 @@
     </style>
 </head>
 
-        <input type="text" id="search" placeholder="Search by vehicle make..." oninput="searchVehicles()">
+       
         <div class="category" id="I4TurboCategory">
     <form id="inventoryForm">
         <label for="customerName">Customer Name:</label>
@@ -246,11 +246,10 @@
         <input type="text" id="vehicleModel" name="vehicleModel" required><br><br>
         <label for="shopname">Shop Name:</label>
         <input type="text" id="shopname" name="shopname" required><br><br>
-        <label for="manualTotal">Manual Total Price:</label>
-<input type="text" id="manualTotal" name="manualTotal" placeholder="Enter Total Price"><br><br>
+      
 
 
-        <input type="text" id="search" placeholder="Search items by name" onkeyup="searchItems()">
+    
         
         <button type="button" class="collapsible">Performance</button>
         <div class="content">
@@ -327,15 +326,12 @@
 
     <script>
         const items = [
-            { category: 'Performance', name: 'Engine 2', price: 21000 },
+            
            
             
          // add peromance here 
-            
-            
-            
-            
-            { category: 'Performance', name: 'Performacne Part', price: 20000 },          
+            { category: 'Performance', name: 'Performance Part', price: 20000 },  
+            { category: 'Performance', name: 'Engine 2', price: 21000 },
             { category: 'Performance', name: 'Engine 3', price: 22000 },
             { category: 'Performance', name: 'Engine 4', price: 23000 },
             { category: 'Performance', name: 'Engine 5', price: 24000 },
@@ -365,17 +361,17 @@
             { category: 'Resprays', name: 'Turbocharger', price: 35000 },
             { category: 'Resprays', name: 'AWD', price: 25000},
             { category: 'Resprays', name: 'RWD', price: 25000 },
-            { category: 'Lights', name: 'FWD', price: 25000 },
-            { category: 'Lights', name: 'Ceramic Brakes', price: 25000 },
-            { category: 'Lights', name: 'Stance Kit', price: 10000 },
-            { category: 'Lights', name: 'Slick Tyres', price: 11340 },
-            { category: 'Lights', name: 'Semi-Slick Tyres', price: 11200 },
-            { category: 'Lights', name: 'Offroad Tyres', price: 11200 },
-            { category: 'Lights', name: 'Drift  Tuning Kit', price: 0 },
-            { category: 'Lights', name: 'FWD', price: 1100 },
-            { category: 'Lights', name: 'FWD', price: 1100 },
-            { category: 'Lights', name: 'FWD', price: 1100 },
+            { category: 'Resprays', name: 'FWD', price: 25000 },
+            { category: 'Resprays', name: 'Ceramic Brakes', price: 25000 },
+            { category: 'Resprays', name: 'Stance Kit', price: 10000 },
+            { category: 'Resprays', name: 'Slick Tyres', price: 11340 },
+            { category: 'Resprays', name: 'Semi-Slick Tyres', price: 11200 },
+            { category: 'Resprays', name: 'Offroad Tyres', price: 11200 },
+            { category: 'Resprays', name: 'Drift  Tuning Kit', price: 0 },
+    
         //add light related things here
+             { category: 'Lights', name: 'Full Service', price: 15000 },
+             { category: 'Lights', name: 'Repair', price: 1500 },
             { category: 'Lights', name: 'Engine Oil', price: 900 },
             { category: 'Lights', name: 'Tire Replacement', price: 2700 },
             { category: 'Lights', name: 'Clutch Replacement', price: 1700 },
